@@ -16,10 +16,6 @@ sub vcl_backend_response {
     unset beresp.http.Cache-Control;
   }
 
-  if (beresp.http.Set-Cookie) {
-    unset beresp.http.Set-Cookie;
-  }
-
   set beresp.ttl = $CACHE_TTL;
 
   # handle errors
@@ -34,7 +30,6 @@ sub vcl_backend_response {
 # remove incoming cookies and allow caching POST requests
 sub vcl_recv {
   unset req.http.X-Body-Len;
-  unset req.http.cookie;
 
   if (req.method == "POST") {
     std.cache_req_body($BODY_SIZE);
