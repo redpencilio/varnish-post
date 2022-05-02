@@ -19,6 +19,21 @@ docker pull redpencil/varnish-post
 
 It is listening on the 80 port.
 
+## Including in a semantic.works stack
+Add the following to your docker-compose file:
+
+```
+  sparql-cache:
+    image: redpencil/varnish-post
+```
+
+In your dispatcher.ex, route sparql calls to the cache
+```
+  match "/sparql", %{ layer: :api, accept: %{ sparql: true } } do
+    forward conn, [], "http://sparql-cache/sparql"
+  end
+```
+
 ## Configuration
 
 You can use following environment variables for configuration:
