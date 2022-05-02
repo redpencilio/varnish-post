@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:3.15
+FROM varnish:7.1.0-alpine
 
 # configuration
 ENV BACKEND_HOST="localhost"
@@ -11,20 +11,16 @@ ENV DISABLE_ERROR_CACHING="true"
 ENV DISABLE_ERROR_CACHING_TTL="30s"
 ENV CONFIG_FILE="default.vcl"
 
+# current logic assumes running as root
+USER root
+
 # install some dependencies
-RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
-  >> /etc/apk/repositories
-RUN apk add --no-cache \
-  gettext \
-  tini \
-  varnish \
-  varnish-modules@testing
+RUN apk add --no-cache tini gettext
 
 # deploy our custom configuration
 WORKDIR /etc/varnish
 COPY config/ /templates
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 EXPOSE 80 8443
-ENTRYPOINT [ "tini", "--", "/entrypoint.sh" ]
+ENTRYPOINT [ "tini", "--", "/usr/local/bin/entrypoint.sh" ]
