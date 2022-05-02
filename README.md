@@ -1,11 +1,13 @@
 # Varnish POST
+> This Docker image lets you cache GET and POST requests.
+> It's main use in a semantic.works stack is for a public endpoint that often receives the (exact) same queries. 
+
 
 This repository is a fork of [zazuko/varnish-post](https://github.com/zazuko/varnish-post). It was modified to fit well in a semantic.works stack:
  - cookie headers are kept, since irrelevant cookies are stripped by mu-identifier
  - defaults for BACKEND are set to the default database location
  - default of CACHE_TTL was lowered to 600s
 
-> This Docker image let you cache GET and POST requests.
 
 For POST requests, it will not cache requests with no body or with an empty body.
 
