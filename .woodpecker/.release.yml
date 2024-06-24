@@ -1,0 +1,18 @@
+steps:
+  build-dry-run:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      repo: ${CI_REPO_OWNER/redpencilio/redpencil}/${CI_REPO_NAME}
+      platforms: linux/amd64
+      dry-run: true
+      purge: true
+  push-tagged-build:
+    image: woodpeckerci/plugin-docker-buildx
+    settings:
+      repo: ${CI_REPO_OWNER/redpencilio/redpencil}/${CI_REPO_NAME}
+      tags: ${CI_COMMIT_TAG##v}
+      platforms: linux/amd64
+      purge: true
+    secrets: [ docker_username, docker_password ]
+when:
+  - event: tag
